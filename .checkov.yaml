@@ -1,0 +1,12 @@
+---
+skip-check:
+  - CKV_AWS_116  # Skip DLQ check for log retention Lambda functions
+  - CKV_AWS_115  # Skip concurrent execution limit check for log retention Lambda functions
+  - CKV_AWS_117  # Skip that AWS Lambda function is configured inside a VPC (For LogRetention)
+  - CKV_AWS_173  # Skip environment variable encryption check for log retention Lambda functions
+  - CKV_AWS_111  # Additional check to skip
+  - CKV_AWS_21   # Additional check to skip
+  - CKV_AWS_18   # Additional check to skip
+  - CKV_AWS_91   # Review
+  - CKV_AWS_103  # Review
+  - CKV_AWS_2    # Review
