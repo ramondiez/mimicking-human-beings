@@ -1,0 +1,68 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# Common project configuration
+[project]
+name = "mcp-cluster-aws"
+version = "0.1.0"
+description = "MCP Cluster for AWS with client and server components"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Your Name", email = "your.email@example.com"},
+]
+dependencies = [
+    "boto3>=1.26.0",
+    "mcp>=0.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "mypy>=1.0.0",
+    "build>=1.0.0",
+    "hatch>=1.7.0",
+]
+
+# Default wheel configuration for the full package
+[tool.hatch.build.targets.wheel]
+packages = ["mcp_client", "mcp_server"]
+
+# Client-specific configuration
+[tool.hatch.build.targets.client]
+only-include = ["mcp_client"]
+sources = ["mcp_client"]
+
+[tool.hatch.build.targets.client.wheel]
+name = "mcp-client"
+packages = ["mcp_client"]
+
+# Server-specific configuration
+[tool.hatch.build.targets.server]
+only-include = ["mcp_server"]
+sources = ["mcp_server"]
+
+[tool.hatch.build.targets.server.wheel]
+name = "mcp-server"
+packages = ["mcp_server"]
+
+# Code formatting and linting configurations
+[tool.black]
+line-length = 88
+target-version = ["py38", "py39", "py310", "py311", "py312"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true

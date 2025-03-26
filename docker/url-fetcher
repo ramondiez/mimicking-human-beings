@@ -1,0 +1,39 @@
+FROM --platform=linux/amd64 python:3.12-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    python3-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+RUN pip install --no-cache-dir \
+    mcp \
+    httpx \
+    uvicorn \
+    starlette \
+    pydantic \
+    pydantic-settings \
+    anyio \
+    beautifulsoup4
+
+# Copy the MCP server package
+COPY mcp_server /app/mcp_server
+
+# Copy the URL fetcher server
+COPY examples/url_fetcher_server.py /app/url_fetcher_server.py
+
+# Expose the port
+EXPOSE 8001
+
+# Set environment variables
+ENV SERVER_PORT=8001
+ENV SERVER_HOST=0.0.0.0
+ENV SERVER_LOG_LEVEL=info
+ENV SERVER_DEBUG=false
+
+# Command to run the server
+CMD ["python", "url_fetcher_server.py"]

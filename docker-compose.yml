@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  url-fetcher:
+    build:
+      context: .
+      dockerfile: docker/url-fetcher
+    ports:
+      - "8001:8001"
+    environment:
+      - SERVER_NAME=url-fetcher-server
+      - SERVER_PORT=8001
+      - SERVER_HOST=0.0.0.0
+      - SERVER_LOG_LEVEL=info
+      - SERVER_DEBUG=false
+      - SERVER_RATE_LIMIT=100
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    volumes:
+      - ./mcp_server:/app/mcp_server
+      - ./examples/url_fetcher_server.py:/app/url_fetcher_server.py
+    networks:
+      - mcp-network
+
+  random-web:
+    build:
+      context: .
+      dockerfile: docker/random-web
+    ports:
+      - "8003:8003"
+    environment:
+      - SERVER_NAME=random-web-server
+      - SERVER_PORT=8003
+      - SERVER_HOST=0.0.0.0
+      - SERVER_LOG_LEVEL=info
+      - SERVER_DEBUG=false
+      - SERVER_RATE_LIMIT=100
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    volumes:
+      - ./mcp_server:/app/mcp_server
+      - ./examples/random_web_server.py:/app/random_web_server.py
+    networks:
+      - mcp-network
+
+networks:
+  mcp-network:
+    driver: bridge

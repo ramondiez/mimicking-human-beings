@@ -1,0 +1,61 @@
+# Global settings for the MCP Cluster CDK project
+
+# Default environment settings
+default:
+  # VPC Configuration
+  vpc:
+    cidr: "10.0.0.0/16"
+    max_azs: 2
+    nat_gateways: 1
+    subnet_configuration:
+      public_subnet_cidr_mask: 24
+      private_subnet_cidr_mask: 24
+      isolated_subnet_cidr_mask: 28
+  
+  # ECS Configuration
+  ecs:
+    cpu: 512  # Valid values: 256, 512, 1024, 2048, 4096
+    memory_limit_mib: 1024  # Valid values depend on CPU
+    desired_count: 1
+    auto_scaling:
+      enabled: false
+      min_capacity: 1
+      max_capacity: 4
+      target_cpu_utilization: 70
+  
+  # Lambda Configuration
+  lambda:
+    memory_size: 256
+    timeout_seconds: 30
+    # Reserved concurrency is commented out to let AWS manage it automatically
+    # reserved_concurrent_executions: 10
+    environment_variables:
+      LOG_LEVEL: "INFO"
+  
+  # Load Balancer Configuration
+  load_balancer:
+    idle_timeout_seconds: 60
+    deletion_protection: false
+    http_to_https_redirect: true
+    # Certificate configuration
+    certificate_arn: null  # ARN of an existing certificate (if you have one)
+    domain_name: null  # Domain name for the certificate
+    create_certificate: false  # Whether to create a new certificate with DNS validation
+    enable_https_in_dev: false  # Whether to enable HTTPS in dev environment
+
+# Development environment settings (inherits from default)
+dev:
+  vpc:
+    nat_gateways: 1
+  ecs:
+    auto_scaling:
+      enabled: false
+  lambda:
+    # Reserved concurrency is commented out to let AWS manage it automatically
+    # reserved_concurrent_executions: 5
+  load_balancer:
+    http_to_https_redirect: false
+    # Use a self-signed certificate for development
+    domain_name: "dev.example.com"
+    create_certificate: false  # Self-signed certificate will be created automatically
+    enable_https_in_dev: false  # Disable HTTPS in dev environment
