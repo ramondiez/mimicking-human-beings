@@ -11,6 +11,12 @@ A modular implementation of Model Completion Protocol (MCP) servers and clients 
 - Lambda layer packaging for serverless deployment
 - AWS CDK infrastructure as code
 
+## Project Architecture
+
+Current implementation builds the next services
+
+![](images/architecture/architecture.png)
+
 ## Project Structure
 
 ```
